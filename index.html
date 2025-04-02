@@ -1,1 +1,50 @@
-frontend UI
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinkHive Authentication</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container" id="login-form">
+            <h2>Login</h2>
+            <form>
+                <input type="email" placeholder="Enter your Email" required>
+                <input type="password" placeholder="Enter your Password" required>
+                <button type="submit">Login</button>
+                <p>Don't have an account? <a href="#" onclick="toggleForms()">Sign Up</a></p>
+            </form>
+        </div>
+
+        <div class="form-container" id="signup-form" style="display: none;">
+            <h2>Sign Up</h2>
+            <form>
+                <input type="text" placeholder="Enter your Username" required>
+                <input type="email" placeholder="Enter your Email" required>
+                <input type="text" placeholder="Enter your Mobile Number" required>
+                <input type="password" placeholder="Enter your Password" required>
+                <button type="submit">Sign Up</button>
+                <p>Already have an account? <a href="#" onclick="toggleForms()">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
+
