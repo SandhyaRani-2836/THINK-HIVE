@@ -1,19 +1,16 @@
-from flask import Flask, render_template, send_from_directory
-import os
+from flask import Flask
+from database import init_db  # Import the database initialization from the database folder
+from backend.config import Config  # Import configuration settings from the config.py file
 
-base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-template_dir = os.path.join(base_dir, 'frontend')
-static_dir = os.path.join(base_dir, 'frontend')
+# Create the Flask app
+app = Flask(__name__)
 
-app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
+# Load the configuration settings
+app.config.from_object(Config)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+# Initialize the database
+init_db(app)
 
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory(static_dir, filename)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# Run the app in debug mode
+if __name__ == "__main__":
+    app.run(debug=True)  # Set to True for development purposes; False in production
