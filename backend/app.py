@@ -1,16 +1,15 @@
 from flask import Flask
-from database import init_db  # Import the database initialization from the database folder
-from backend.config import Config  # Import configuration settings from the config.py file
+from config import Config
+from models import db
+from routes import routes
 
-# Create the Flask app
-app = Flask(__name__)
-
-# Load the configuration settings
+app = Flask(_name_, static_folder=\"../frontend\", template_folder=\"../frontend\")
 app.config.from_object(Config)
 
-# Initialize the database
-init_db(app)
+db.init_app(app)
+app.register_blueprint(routes)
 
-# Run the app in debug mode
-if __name__ == "__main__":
-    app.run(debug=True)  # Set to True for development purposes; False in production
+if _name_ == '_main_':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
