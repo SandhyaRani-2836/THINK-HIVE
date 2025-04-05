@@ -1,1 +1,45 @@
-frontend UI
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project_name }}</title> <!-- Dynamically insert project name -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to {{ project_name }}</h1>
+    </header>
+    <main>
+        <div>
+            <h2>Project Verification</h2>
+            <form action="/verify_project" method="POST">
+                <label for="project_name">Project Name:</label>
+                <input type="text" id="project_name" name="project_name" required>
+                <br><br>
+                <label for="project_description">Project Description:</label>
+                <textarea id="project_description" name="project_description" required></textarea>
+                <br><br>
+                <button type="submit">Verify Project</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Submit Code</h2>
+            <form action="/submit_code" method="POST">
+                <label for="code">Code:</label>
+                <textarea id="code" name="code" required></textarea>
+                <br><br>
+                <button type="submit">Submit Code</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 THINK HIVE</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
