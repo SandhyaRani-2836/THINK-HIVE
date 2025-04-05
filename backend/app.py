@@ -1,29 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, send_from_directory
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend')
 
-# Home route
 @app.route('/')
 def home():
     return render_template('index.html', project_name="THINK HIVE")
 
-# Route for project verification
-@app.route('/verify_project', methods=['POST'])
-def verify_project():
-    if request.method == 'POST':
-        # Retrieve project details from the form
-        project_name = request.form['project_name']
-        project_description = request.form['project_description']
-        return redirect(url_for('home'))
-    return render_template('verify_project.html')
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(os.path.join(app.root_path, 'frontend'), filename)
 
-# Route for submitting code
-@app.route('/submit_code', methods=['POST'])
-def submit_code():
-    if request.method == 'POST':
-        code = request.form['code']
-        return redirect(url_for('home'))
-    return render_template('submit_code.html')
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
