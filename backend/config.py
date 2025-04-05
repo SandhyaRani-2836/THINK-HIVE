@@ -1,5 +1,8 @@
 import os
 
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(_file_), '..', 'database'))
+
 class Config:
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(BASE_DIR, \"database.db\")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "postgresql://username:password@localhost/db_name")
+    SECRET_KEY = 'your_secret_key'
