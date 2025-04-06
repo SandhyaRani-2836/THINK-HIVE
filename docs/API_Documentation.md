@@ -30,3 +30,14 @@ application/json
   "drawbacks": "Depends on camera accuracy",
   "code_link": "https://github.com/johndoe/project"
 }
+## Data Model
+
+| Field              | Type     | Required |
+|-------------------|----------|----------|
+| id                | Integer  | Auto     |
+| student_name      | String   | Yes      |
+| department        | String   | Yes      |
+| title             | String   | Yes      |
+| problem_statement | Text     | Yes      |
+| drawbacks         | Text     | No       |
+| code_link         | String   | No       |
