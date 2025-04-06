@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
 from models import db, Project
 
-routes = Blueprint('routes', _name_)
+routes = Blueprint('routes', __name__)
 
 @routes.route('/')
 def home():
