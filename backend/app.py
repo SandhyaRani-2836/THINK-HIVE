@@ -29,5 +29,5 @@ def submit():
     db.session.commit()
     return jsonify({'message': 'Project submitted successfully'}), 201
 
-if _name_ == '_main_':
+if __name__ == '_main_':
     app.run(debug=True)
