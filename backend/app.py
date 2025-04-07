@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 
-app = Flask(_name_, static_folder="../frontend", template_folder="../frontend")
+app = Flask(__name__, static_folder="../frontend", template_folder="../frontend")
 
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database/database.db'
