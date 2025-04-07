@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 
-app = Flask(__name__, static_folder="../frontend", template_folder="../frontend")
+app = Flask(_name_, static_folder="../frontend", template_folder="../frontend")
 
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database/database.db'
@@ -29,5 +29,5 @@ def submit():
     db.session.commit()
     return jsonify({'message': 'Project submitted successfully'}), 201
 
-if __name__ == '_main_':
+if _name_ == '_main_':
     app.run(debug=True)
