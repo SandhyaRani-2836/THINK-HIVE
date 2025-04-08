@@ -97,6 +97,60 @@ a {
     font-weight: bold;
     transition: background-color 0.3s;
 }
+body {
+    background-color: #fdf6f0;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.upload-container {
+    background-color: #fffaf5;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 500px;
+}
+
+.upload-container h2 {
+    text-align: center;
+    color: #5e4b3c;
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+}
+
+.upload-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-container input[type="text"],
+.upload-container input[type="url"],
+.upload-container input[type="file"],
+.upload-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.upload-container button {
+    padding: 12px;
+    background-color: #d8cfc4;
+    color: #333;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-container button:hover {
+    background-color: #c3bdb6;
+}
 
 .menu-buttons .btn:hover {
     background-color: #c3bdb6;
