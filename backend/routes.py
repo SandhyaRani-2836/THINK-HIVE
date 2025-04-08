@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, url_for, flash
 import os
 
-routes = Blueprint('routes', _name_)
+routes = Blueprint('routes', __name__)
 
 UPLOAD_FOLDER = 'uploaded_documents'
 ALLOWED_EXTENSIONS = {'pdf', 'docx'}
@@ -37,7 +37,7 @@ def upload_project():
 
 from flask import Blueprint, request, redirect, url_for, render_template
 
-routes = Blueprint('routes', _name_)
+routes = Blueprint('routes', __name__)
 
 @routes.route('/login', methods=['POST'])
 def login():
@@ -62,7 +62,7 @@ def upload_page():
 
 from flask import Blueprint, request, redirect, url_for, render_template
 
-routes = Blueprint('routes', _name_)
+routes = Blueprint('routes', __name__)
 
 @routes.route('/')
 def home():
