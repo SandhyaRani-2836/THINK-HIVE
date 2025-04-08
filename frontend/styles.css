@@ -24,14 +24,6 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.welcome-heading {
-    text-align: center;
-    color: #5c4b51; /* Contrasting color - deep pastel mauve */
-    font-family: 'Poppins', sans-serif;
-    font-size: 28px;
-    margin-top: 30px;
-    margin-bottom: 20px;
-}
 
 h1, h2 {
     color: #3e3e3e;
