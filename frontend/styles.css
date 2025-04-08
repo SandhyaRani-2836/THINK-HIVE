@@ -14,7 +14,16 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
-
+.subtitle {
+    font-size: 1.5rem;
+    color: #5C4B8B;
+    font-family: 'Georgia', serif;
+    margin-top: 10px;
+    white-space: nowrap;          /* Keeps it in one line */
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .welcome-heading {
     text-align: center;
     color: #5c4b51; /* Contrasting color - deep pastel mauve */
