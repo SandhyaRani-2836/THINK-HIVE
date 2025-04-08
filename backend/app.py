@@ -8,5 +8,5 @@ app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
 
 app.register_blueprint(routes)
 
-if __name__ == "_main_":
+if __name__ == '__main__':
     app.run(debug=True)
