@@ -71,3 +71,24 @@ a {
     text-decoration: none;
     font-weight: bold;
 }
+.menu-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.menu-buttons .btn {
+    padding: 15px 30px;
+    background-color: #d8cfc4;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.menu-buttons .btn:hover {
+    background-color: #c3bdb6;
+}
