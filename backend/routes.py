@@ -58,3 +58,35 @@ def signup():
 @routes.route('/upload', methods=['GET', 'POST'])
 def upload_page():
     return render_template('upload.html')  # make sure to move upload.html to 'templates' folder
+
+
+from flask import Blueprint, request, redirect, url_for, render_template
+
+routes = Blueprint('routes', _name_)
+
+@routes.route('/')
+def home():
+    return render_template('login.html')
+
+@routes.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == "admin" and password == "admin":  # Simple logic
+            return redirect(url_for('routes.upload_page'))
+        else:
+            return "Invalid credentials"
+    return render_template('login.html')
+
+@routes.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        # Save user info if needed
+        return redirect(url_for('routes.upload_page'))
+    return render_template('signup.html')
+
+@routes.route('/upload', methods=['GET'])
+def upload_page():
+    return render_template('upload.html')
