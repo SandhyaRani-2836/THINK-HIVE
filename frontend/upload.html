@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Upload - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="upload-container">
+        <h2>Upload Your Project</h2>
+        <form action="/submit" method="POST" enctype="multipart/form-data">
+            <input type="text" name="student_name" placeholder="Your Name" required>
+            <input type="text" name="department" placeholder="Department" required>
+            <input type="text" name="title" placeholder="Project Title" required>
+            <textarea name="problem_statement" placeholder="Problem Statement" rows="3" required></textarea>
+            <textarea name="drawbacks" placeholder="Drawbacks (Optional)" rows="2"></textarea>
+            <input type="url" name="code_link" placeholder="GitHub/Code Link (Optional)">
+            
+            <label for="file">Upload Project Document (Max 10MB):</label>
+            <input type="file" name="file" accept=".pdf,.doc,.docx" required>
+            
+            <button type="submit">Submit Project</button>
+        </form>
+    </div>
+</body>
+</html>
