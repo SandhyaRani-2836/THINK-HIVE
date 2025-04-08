@@ -1,23 +1,24 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 from models import db, Project
 
 routes = Blueprint('routes', __name__)
 
-@routes.route('/')
-def home():
-    return render_template('index.html')
-
-@routes.route('/submit', methods=['POST'])
+@routes.route('/submit_project', methods=['POST'])
 def submit_project():
     data = request.get_json()
-    project = Project(
-        student_name=data['student_name'],
-        department=data['department'],
-        title=data['title'],
-        problem_statement=data['problem_statement'],
-        drawbacks=data.get('drawbacks'),
-        code_link=data.get('code_link')
-    )
+    project = Project(**data)
     db.session.add(project)
     db.session.commit()
-    return jsonify({"message": "Project submitted successfully!"})
+    return jsonify({'message': 'Project submitted successfully'}), 201
+
+@routes.route('/projects', methods=['GET'])
+def get_projects():
+    projects = Project.query.all()
+    return jsonify([{
+        'title': p.title,
+        'department': p.department,
+        'topic': p.topic,
+        'code_link': p.code_link,
+        'description': p.description,
+        'submitted_by': p.submitted_by
+    } for p in projects])
