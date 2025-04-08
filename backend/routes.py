@@ -34,3 +34,27 @@ def upload_project():
         return 'Project Uploaded Successfully'
     else:
         return 'Invalid file format'
+
+from flask import Blueprint, request, redirect, url_for, render_template
+
+routes = Blueprint('routes', _name_)
+
+@routes.route('/login', methods=['POST'])
+def login():
+    # authentication logic here (mock or real)
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    if username == "admin" and password == "admin":  # example logic
+        return redirect(url_for('routes.upload_page'))
+    else:
+        return "Invalid credentials"
+
+@routes.route('/signup', methods=['POST'])
+def signup():
+    # collect signup info
+    return redirect(url_for('routes.upload_page'))
+
+@routes.route('/upload', methods=['GET', 'POST'])
+def upload_page():
+    return render_template('upload.html')  # make sure to move upload.html to 'templates' folder
