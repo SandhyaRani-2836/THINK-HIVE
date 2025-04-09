@@ -2,7 +2,10 @@ from flask import Flask
 from routes import routes
 import os
 
-app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
+app = Flask(__name__, 
+            template_folder='templates', 
+            static_folder='static')
+
 app.secret_key = "thinkhive"
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
 
