@@ -1,3 +1,81 @@
+/* Make the whole body centered */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color:  #fdf6f0; 
+    margin: 0;
+    min-height:100vh;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: auto;
+}
+
+/* Container for the form */
+.upload-container {
+    background-color: #ffffff;
+    margin-top:50px;
+    margin-bottom:50px;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    height:600px;
+    overflow-y:auto;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    color: #2b3e55;
+    margin-bottom: 30px;
+}
+
+/* Each field spacing */
+.form-group {
+    margin-bottom: 10px;
+
+}
+
+/* Input and textarea styles */
+input[type="text"],
+input[type="url"],
+input[type="file"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 17px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+}
+
+/* File label styling */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Submit button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2a4d9b;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1f3a73;
+}
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -155,4 +233,3 @@ body {
 
 .menu-buttons .btn:hover {
     background-color: #c3bdb6;
-}
