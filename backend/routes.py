@@ -32,3 +32,35 @@ def signup():
 @routes.route('/upload', methods=['GET', 'POST'])
 def upload_page():
     return render_template('upload.html')
+@routes.route('/view-projects')
+def view_projects():
+    # Dummy data (you’ll replace this with actual DB queries)
+    projects = [
+        {
+            "name": "Alice",
+            "department": "CSE",
+            "domain": "AI",
+            "title": "Smart Vision",
+            "statement": "AI for visually impaired",
+            "link": "https://github.com/alice/smartvision",
+            "document": "smartvision.pdf"
+        },
+        {
+            "name": "Bob",
+            "department": "ECE",
+            "domain": "IoT",
+            "title": "Home Automation",
+            "statement": "Smart home using sensors",
+            "link": "",
+            "document": "homeautomation.pdf"
+        }
+    ]
+
+    department_wise = {}
+    for project in projects:
+        dept = project['department']
+        if dept not in department_wise:
+            department_wise[dept] = []
+        department_wise[dept].append(project)
+
+    return render_template('view.html', department_wise=department_wise)
