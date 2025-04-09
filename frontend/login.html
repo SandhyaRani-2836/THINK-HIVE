@@ -1,19 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Login - ThinkHive</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Login - ThinkHive</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      margin-top: 4px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body class="auth">
-    <div class="auth-container">
-        <h2>Login</h2>
-        <form>
-            <input type="email" placeholder="Enter Email" required>
-            <input type="password" placeholder="Enter Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-    </div>
+  <div class="auth-container">
+    <h2>Login</h2>
+    <form id="login-form" novalidate>
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <span id="email-error" class="error-message"></span>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <span id="password-error" class="error-message"></span>
+      </div>
+      <div style="text-align: right; margin-bottom: 10px;">
+        <a href="#" style="font-size: 14px; color: #2a4d9b;">Forgot Password?</a>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const emailError = document.getElementById("email-error");
+    const passwordError = document.getElementById("password-error");
+
+    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+
+    function validateInput() {
+      let isValid = true;
+
+      emailError.textContent = !emailRegex.test(email.value.trim()) ? "Invalid email address." : "";
+      passwordError.textContent = password.value.length < 6 ? "Password must be at least 6 characters." : "";
+
+      if (emailError.textContent || passwordError.textContent) {
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    form.addEventListener("submit", function (e) {
+      if (!validateInput()) {
+        e.preventDefault();
+      }
+    });
+
+    email.addEventListener("input", validateInput);
+    password.addEventListener("input", validateInput);
+  </script>
 </body>
 </html>
