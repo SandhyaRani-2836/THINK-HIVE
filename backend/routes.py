@@ -1,66 +1,56 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Flask, request, jsonify
+from models import db, User, Project
+from flask_cors import CORS
+import os
 
-routes = Blueprint('routes', __name__)
+app = Flask(__name__)
+CORS(app)
+app.config.from_pyfile('config.py')
+db.init_app(app)
 
-# Landing Page
-@routes.route('/')
-def landing():
-    return render_template('landing.html')
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
-# Login Page (GET) and Login Form Handling (POST)
-@routes.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        if username == 'admin' and password == 'admin':
-            return redirect(url_for('routes.upload_page'))
-        else:
-            return "Invalid credentials"
-    return render_template('login.html')
-
-# Signup Page (GET) and Signup Form Handling (POST)
-@routes.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
-    if request.method == 'POST':
-        # Handle signup form data here (just redirecting now)
-        return redirect(url_for('routes.upload_page'))
-    return render_template('signup.html')
+    data = request.get_json()
+    new_user = User(
+        name=data['name'],
+        email=data['email'],
+        password=data['password']
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'Signup successful'})
 
-# Upload Page
-@routes.route('/upload', methods=['GET', 'POST'])
-def upload_page():
-    return render_template('upload.html')
-@routes.route('/view-projects')
-def view_projects():
-    # Dummy data (you’ll replace this with actual DB queries)
-    projects = [
-        {
-            "name": "Alice",
-            "department": "CSE",
-            "domain": "AI",
-            "title": "Smart Vision",
-            "statement": "AI for visually impaired",
-            "link": "https://github.com/alice/smartvision",
-            "document": "smartvision.pdf"
-        },
-        {
-            "name": "Bob",
-            "department": "ECE",
-            "domain": "IoT",
-            "title": "Home Automation",
-            "statement": "Smart home using sensors",
-            "link": "",
-            "document": "homeautomation.pdf"
-        }
-    ]
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(email=data['email'], password=data['password']).first()
+    if user:
+        return jsonify({'message': 'Login successful'})
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
 
-    department_wise = {}
-    for project in projects:
-        dept = project['department']
-        if dept not in department_wise:
-            department_wise[dept] = []
-        department_wise[dept].append(project)
+@app.route('/upload', methods=['POST'])
+def upload_project():
+    title = request.form['title']
+    description = request.form['description']
+    file = request.files['file']
+    filename = file.filename
+    upload_path = os.path.join(os.path.dirname(__file__), 'uploads', filename)
+    os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+    file.save(upload_path)
 
-    return render_template('view.html', department_wise=department_wise)
+    new_project = Project(
+        title=title,
+        description=description,
+        code_file=filename
+    )
+    db.session.add(new_project)
+    db.session.commit()
+    return jsonify({'message': 'Project uploaded successfully'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
