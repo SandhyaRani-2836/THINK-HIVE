@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Projects - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Uploaded Projects</h1>
+        {% if projects %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Department</th>
+                        <th>Domain</th>
+                        <th>Team Members</th>
+                        <th>File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td>{{ project.title }}</td>
+                            <td>{{ project.department }}</td>
+                            <td>{{ project.domain }}</td>
+                            <td>
+                                {% for member in project.team_members %}
+                                    {{ member }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('routes.download_file', filename=project.filename) }}" target="_blank">Download</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No projects uploaded yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
