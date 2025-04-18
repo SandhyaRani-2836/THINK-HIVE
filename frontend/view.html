@@ -2,10 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View Projects - ThinkHive</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Uploaded Projects - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='view.css') }}">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">ThinkHive</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('routes.home') }}">Home</a></li>
+            <li><a href="{{ url_for('routes.upload_page') }}">Upload Project</a></li>
+            <li><a href="{{ url_for('routes.view_projects') }}" class="active">Uploaded Projects</a></li>
+            <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
     <div class="container">
         <h1>Uploaded Projects</h1>
         {% if projects %}
