@@ -233,3 +233,50 @@ body {
 
 .menu-buttons .btn:hover {
     background-color: #c3bdb6;
+
+
+.container {
+    width: 90%;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #4a3f35;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #e8d4ba;
+    color: #3e332b;
+}
+
+tr:hover {
+    background-color: #f1e7da;
+}
+
+a {
+    color: #5a3e36;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
