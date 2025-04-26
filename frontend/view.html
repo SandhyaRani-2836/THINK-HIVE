@@ -1,175 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ThinkHive - View Projects</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <title>View Projects - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filters input, .filters select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .projects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .project-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            width: 270px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: left;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card h3 {
+            color: #2a4d9b;
+            margin-bottom: 10px;
+        }
+
+        .project-card p {
+            color: #555;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #1976d2;
+        }
+
+        .no-projects {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+
+    <script>
+        function filterProjects() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const departmentFilter = document.getElementById("department").value;
+            const domainFilter = document.getElementById("domain").value;
+            const cards = document.querySelectorAll(".project-card");
+
+            cards.forEach(card => {
+                const title = card.getAttribute("data-title").toLowerCase();
+                const department = card.getAttribute("data-department");
+                const domain = card.getAttribute("data-domain");
+
+                const matchSearch = title.includes(searchInput);
+                const matchDepartment = departmentFilter === "All" || department === departmentFilter;
+                const matchDomain = domainFilter === "All" || domain === domainFilter;
+
+                card.style.display = (matchSearch && matchDepartment && matchDomain) ? "block" : "none";
+            });
+        }
+    </script>
 </head>
 <body>
+    <div class="container">
+        <h1>Explore Projects</h1>
 
-  <h1>Uploaded Projects</h1>
+        <!-- Filters -->
+        <div class="filters">
+            <input type="text" id="search" onkeyup="filterProjects()" placeholder="Search projects...">
 
-  <!-- Filters -->
-  <div class="filter-container">
-    <select id="domainFilter">
-      <option value="">All Domains</option>
-      <option value="AI">AI</option>
-      <option value="Web Development">Web Development</option>
-      <option value="IoT">IoT</option>
-      <option value="Data Science">Data Science</option>
-      <option value="Cyber Security">Cyber Security</option>
-    </select>
+            <select id="department" onchange="filterProjects()">
+                <option value="All">All Departments</option>
+                <option value="CSE">Computer Science</option>
+                <option value="ECE">Electronics</option>
+                <option value="ME">Mechanical</option>
+                <option value="CE">Civil</option>
+                <option value="EEE">Electrical</option>
+            </select>
 
-    <select id="departmentFilter">
-      <option value="">All Departments</option>
-      <option value="CSE">CSE</option>
-      <option value="ECE">ECE</option>
-      <option value="MECH">MECH</option>
-      <option value="CIVIL">CIVIL</option>
-      <option value="ECE">ECE</option>
-    </select>
-  </div>
+            <select id="domain" onchange="filterProjects()">
+                <option value="All">All Domains</option>
+                <option value="AI/ML">AI/ML</option>
+                <option value="Web Development">Web Development</option>
+                <option value="IoT">IoT</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+            </select>
+        </div>
 
-  <!-- Projects Grid -->
-  <div class="grid" id="projectGrid">
-    <!-- Example Project Card -->
-    <div class="card" data-domain="AI" data-department="CSE">
-      <h3>Traffic Management Systems</h3>
-      <p><strong>Domain:</strong> AI</p>
-      <p><strong>Department:</strong> CSE</p>
-      <a href="#">View Details</a>
+        <!-- Projects List -->
+        {% if projects %}
+            <div class="projects-list">
+                {% for project in projects %}
+                <div class="project-card"
+                     data-title="{{ project.title }}"
+                     data-department="{{ project.department }}"
+                     data-domain="{{ project.domain }}">
+                    <h3>{{ project.title }}</h3>
+                    <p><strong>Department:</strong> {{ project.department }}</p>
+                    <p><strong>Domain:</strong> {{ project.domain }}</p>
+                    <p><strong>Student:</strong> {{ project.member1_name }}</p>
+                    <a href="{{ url_for('view_project_details', project_id=project.id) }}" class="btn">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-projects">No projects found.</p>
+        {% endif %}
     </div>
-
-    <div class="card" data-domain="AI" data-department="CSE">
-      <h3>Traffic Management Systems</h3>
-      <p><strong>Domain:</strong> AI</p>
-      <p><strong>Department:</strong> CSE</p>
-      <a href="#">View Details</a>
-    </div>
-
-    
-    <div class="card" data-domain="Web Development" data-department="ECE">
-      <h3>Solar Tracking</h3>
-      <p><strong>Domain:</strong>IOT</p>
-      <p><strong>Department:</strong> ECE</p>
-      <a href="#">View Details</a>
-    </div>
-
-    <div class="card" data-domain="IoT" data-department="MECH">
-      <h3>Smart Irrigation System</h3>
-      <p><strong>Domain:</strong> IoT</p>
-      <p><strong>Department:</strong> MECH</p>
-      <a href="#">View Details</a>
-    </div>
-  </div>
-
-  <!-- Filter Script -->
-  <script>
-    const domainFilter = document.getElementById('domainFilter');
-    const departmentFilter = document.getElementById('departmentFilter');
-    const cards = document.querySelectorAll('.card');
-
-    function filterProjects() {
-      const selectedDomain = domainFilter.value;
-      const selectedDept = departmentFilter.value;
-
-      cards.forEach(card => {
-        const matchDomain = !selectedDomain || card.dataset.domain === selectedDomain;
-        const matchDept = !selectedDept || card.dataset.department === selectedDept;
-        card.style.display = matchDomain && matchDept ? 'block' : 'none';
-      });
-    }
-
-    domainFilter.addEventListener('change', filterProjects);
-    departmentFilter.addEventListener('change', filterProjects);
-  </script>
-
-
-  <!-- Filter + View Details Script -->
-  <script>
-    // Existing filters
-    const domainFilter = document.getElementById('domainFilter');
-    const departmentFilter = document.getElementById('departmentFilter');
-    const cards = document.querySelectorAll('.card');
-
-    function filterProjects() {
-      const selectedDomain = domainFilter.value;
-      const selectedDept = departmentFilter.value;
-
-      cards.forEach(card => {
-        const matchDomain = !selectedDomain || card.dataset.domain === selectedDomain;
-        const matchDept = !selectedDept || card.dataset.department === selectedDept;
-        card.style.display = matchDomain && matchDept ? 'block' : 'none';
-      });
-    }
-
-    domainFilter.addEventListener('change', filterProjects);
-    departmentFilter.addEventListener('change', filterProjects);
-
-
-
-
-
-
-
-
-
-
-<!-- Projects Grid -->
-<div class="grid" id="projectGrid">
-
-  <!-- Project Card 1 -->
-  <div class="card" data-domain="AI" data-department="CSE">
-    <h3>Smart Surveillance System</h3>
-    <p><strong>Domain:</strong> AI</p>
-    <p><strong>Department:</strong> CSE</p>
-    <a href="#" class="view-link">View Details</a>
-
-    <!-- Hidden team details -->
-    <div class="team-details" style="display: none;">
-      <p><strong>Team Members:</strong> Alice, Bob</p>
-      <p><strong>Guide:</strong> Dr. Smith</p>
-      <p><strong>Code Repo:</strong> <a href="#">GitHub Link</a></p>
-      <p><strong>Description:</strong> This system uses AI-powered cameras...</p>
-    </div>
-  </div>
-
-  <!-- Project Card 2 -->
-  <div class="card" data-domain="Web Development" data-department="ECE">
-    <h3>Online Voting Portal</h3>
-    <p><strong>Domain:</strong> Web Development</p>
-    <p><strong>Department:</strong> ECE</p>
-    <a href="#" class="view-link">View Details</a>
-
-    <div class="team-details" style="display: none;">
-      <p><strong>Team Members:</strong> Sarah, John</p>
-      <p><strong>Guide:</strong> Prof. Kumar</p>
-      <p><strong>Code Repo:</strong> <a href="#">GitHub Link</a></p>
-      <p><strong>Description:</strong> Secure online voting with blockchain...</p>
-    </div>
-  </div>
-
-  <!-- Project Card 3 -->
-  <div class="card" data-domain="IoT" data-department="MECH">
-    <h3>Smart Irrigation System</h3>
-    <p><strong>Domain:</strong> IoT</p>
-    <p><strong>Department:</strong> MECH</p>
-    <a href="#" class="view-link">View Details</a>
-
-    <div class="team-details" style="display: none;">
-      <p><strong>Team Members:</strong> Ravi, Neha</p>
-      <p><strong>Guide:</strong> Dr. Patel</p>
-      <p><strong>Code Repo:</strong> <a href="#">GitHub Link</a></p>
-      <p><strong>Description:</strong> Moisture sensors and IoT control system...</p>
-    </div>
-  </div>
-
-</div>
-
-
-
-
-
 </body>
 </html>
