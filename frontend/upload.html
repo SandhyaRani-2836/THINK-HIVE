@@ -1,40 +1,211 @@
+upload_project.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Project Upload - ThinkHive</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Project</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <style>
+    .upload-container {
+      background-color: #fffaf5;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 700px;
+      margin: 40px auto;
+    }
+    .upload-container h2 {
+      text-align: center;
+      color: #5e4b3c;
+      margin-bottom: 20px;
+      font-family: 'Georgia', serif;
+    }
+    .upload-container form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .upload-container input,
+    .upload-container textarea,
+    .upload-container select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    .upload-container input:focus,
+    .upload-container textarea:focus,
+    .upload-container select:focus {
+      border-color: #d8cfc4;
+    }
+    .upload-container button {
+      padding: 12px;
+      background-color: #d8cfc4;
+      color: #333;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    .upload-container button:hover {
+      background-color: #c3bdb6;
+    }
+    .flash-messages {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .flash-message {
+      margin: 0;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #5e4b3c;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      color: #d8cfc4;
+    }
+  </style>
 </head>
 <body>
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      {% if session.get('role') == 'student' %}
+        <li><a href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('upload_project') }}">Upload Project</a></li>
+      {% elif session.get('role') == 'faculty' %}
+        <li><a href="{{ url_for('faculty_dashboard') }}">Dashboard</a></li>
+      {% endif %}
+      {% if session.get('user_id') %}
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for message in messages %}
+            <p class="flash-message">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     <div class="upload-container">
-        <h2>Upload Your Project</h2>
-        <form action="http://127.0.0.1:5000/upload" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <input type="text" name="student_name" placeholder="Your Name" required>
-            </div>
-            <div class="form-group">
-                <input type="text" name="department" placeholder="Department" required>
-            </div>
-            <div class="form-group">
-                <input type="text" name="title" placeholder="Project Title" required>
-            </div>
-            <div class="form-group">
-                <textarea name="Problem_statement" placeholder="Problem Statement" rows="3" required></textarea>
-            </div>
-            <div class="form-group">
-                <textarea name="drawbacks" placeholder="Drawbacks (Optional)" rows="2"></textarea>
-            </div>
-            <div class="form-group">
-                <input type="url" name="code_link" placeholder="GitHub/Code Link (Optional)">
-            </div>
-            <div class="form-group">
-                <label for="file">Upload Project Document (Max 10MB):</label>
-                <input type="file" name="file" accept=".pdf,.doc,.docx" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Submit Project</button>
-            </div>
-        </form>
+      <h2>Upload Project</h2>
+      <form method="POST" action="{{ url_for('upload_project') }}" enctype="multipart/form-data" id="projectForm" onsubmit="return confirmUpload();">
+        <!-- Group Size -->
+        <label for="groupSize">Number of Group Members:</label>
+        <select id="groupSize" name="groupSize" required>
+          <option value="">-- Select --</option>
+          <option value="1">1 Member</option>
+          <option value="2">2 Members</option>
+          <option value="3">3 Members</option>
+          <option value="4">4 Members</option>
+          <option value="5">5 Members</option>
+        </select>
+
+        <!-- Dynamic group members -->
+        <div id="members"></div>
+
+        <!-- Department -->
+        <select name="department" required>
+          <option value="" disabled selected>Select Department</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="EEE">EEE</option>
+          <option value="MECH">MECH</option>
+          <option value="CIVIL">CIVIL</option>
+        </select>
+
+        <!-- Domain -->
+        <select name="domain" required>
+          <option value="" disabled selected>Select Domain</option>
+          <option value="Web Development">Web Development</option>
+          <option value="AI/ML">AI/ML</option>
+          <option value="Cybersecurity">Cybersecurity</option>
+          <option value="IoT">IoT</option>
+          <option value="Robotics">Robotics</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <!-- Abstract -->
+        <label for="abstract_file">Upload Abstract (PDF)</label>
+        <input type="file" id="abstract_file" name="abstract_file" accept=".pdf" required>
+        
+        <!-- Project Folder -->
+        <label>Upload Full Project Folder (ZIP)</label>
+        <input type="file" name="project_folder" accept=".zip" required>
+
+        <!-- Hardware -->
+        <label>Hardware Requirement File (Image or PDF)</label>
+        <input type="file" name="hardware_file" accept="image/*,application/pdf">
+
+        <label>Hardware Video Link (Optional)</label>
+        <input type="url" name="hardware_link" placeholder="https://example.com/video">
+
+        <button type="submit">Upload Project</button>
+        <button type="reset">Cancel</button>
+      </form>
+
+      <!-- Flash message below the submit button -->
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages" style="margin-top: 20px;">
+            {% for message in messages %}
+              <p class="flash-message">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
     </div>
+  </div>
+
+  <script>
+    document.getElementById('groupSize').addEventListener('change', function () {
+      const membersDiv = document.getElementById('members');
+      membersDiv.innerHTML = '';
+      const count = parseInt(this.value);
+      for (let i = 1; i <= count; i++) {
+        membersDiv.innerHTML += `
+          <fieldset>
+            <legend>Member ${i}</legend>
+            <input type="text" name="member${i}_name" placeholder="Name" required>
+            <input type="text" name="member${i}_roll" placeholder="Roll Number" required>
+            <input type="email" name="member${i}_email" placeholder="Email" required>
+          </fieldset>
+        `;
+      }
+    });
+
+    function confirmUpload() {
+      return confirm("Are you sure you want to upload this project?");
+    }
+  </script>
 </body>
 </html>
