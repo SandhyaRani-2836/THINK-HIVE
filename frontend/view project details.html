@@ -1,1 +1,18 @@
-
+view_project_details.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ project.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ project.title }}</h1>
+        <p><strong>Department:</strong> {{ project.department }}</p>
+        <p><strong>Domain:</strong> {{ project.domain }}</p>
+        <p><strong>Student:</strong> {{ project.student_name }}</p>
+        <p><strong>Abstract:</strong> {{ project.abstract }}</p>
+        <a href="{{ url_for('static', filename='uploads/' + project.file_path) }}" download>Download Project File</a>
+    </div>
+</body>
+</html>
