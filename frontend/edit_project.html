@@ -1,1 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Project - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Project</h1>
+        <form method="POST">
+            <label>Project Title:</label>
+            <input type="text" name="project_title" value="{{ project['project_title'] }}" required><br><br>
 
+            <label>Domain:</label>
+            <input type="text" name="domain" value="{{ project['domain'] }}" required><br><br>
+
+            <label>Code Link (optional):</label>
+            <input type="text" name="code_link" value="{{ project['code_link'] }}"><br><br>
+
+            <!-- You can add file upload options here if you want -->
+
+            <button type="submit" class="btn">Update Project</button>
+            <a href="{{ url_for('view_projects') }}" class="btn btn-back">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
