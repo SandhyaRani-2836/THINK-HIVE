@@ -1,4 +1,6 @@
-
+/* ============================
+   General Body Styling
+   ============================ */
    body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f7f3eb;
@@ -388,7 +390,7 @@ hr {
     width: 90%;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: #fffefc;
+    background-color: #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
@@ -467,7 +469,7 @@ hr {
     max-width: 900px;
     margin: 40px auto;
     padding: 30px;
-    background-color: #fff8f0;
+    background-color: #e0e0e0;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     font-family: 'Segoe UI', sans-serif;
@@ -475,6 +477,7 @@ hr {
 
 .project-details-container h2 {
     font-size: 28px;
+    background-color: #e0e0e0;
     color: #4b2e2e;
     margin-bottom: 15px;
 }
