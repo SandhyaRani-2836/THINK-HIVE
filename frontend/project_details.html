@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        {% if project %}
+            <h1>{{ project.project_title }}</h1>
 
+            <p><strong>Department:</strong> {{ project.department }}</p>
+            <p><strong>Domain:</strong> {{ project.domain }}</p>
+
+            <p><strong>Team Members:</strong><br>
+                {{ project.member1_name }}
+                {% if project.member2_name %}, {{ project.member2_name }}{% endif %}
+                {% if project.member3_name %}, {{ project.member3_name }}{% endif %}
+                {% if project.member4_name %}, {{ project.member4_name }}{% endif %}
+                {% if project.member5_name %}, {{ project.member5_name }}{% endif %}
+            </p>
+
+            <p><strong>Abstract:</strong><br>
+                {% if project.abstract_link %}
+                    <a href="{{ project.abstract_link }}" target="_blank" class="file-link">View Abstract</a>
+                {% else %}
+                    No abstract uploaded.
+                {% endif %}
+            </p>
+
+            <p><strong>Project Files:</strong><br>
+                {% if files_list %}
+                    <ul>
+                        {% for file in files_list %}
+                            <li>
+                                <a href="{{ url_for('view_file', filepath=file) }}" target="_blank" class="file-link">
+                                    {{ file }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    No project files uploaded.
+                {% endif %}
+            </p>
+
+            <p><strong>Hardware File:</strong><br>
+                {% if project.hardware_file_link %}
+                    <a href="{{ project.hardware_file_link }}" target="_blank" class="file-link">View Hardware File</a>
+                {% else %}
+                    No hardware file uploaded.
+                {% endif %}
+            </p>
+
+            <p><strong>Code Link:</strong><br>
+                {% if project.code_link %}
+                    <a href="{{ project.code_link }}" target="_blank" class="file-link">View Code</a>
+                {% else %}
+                    No code link available.
+                {% endif %}
+            </p>
+
+            <p><strong>Faculty Feedback:</strong><br>
+                {% if project.feedback %}
+                    {{ project.feedback }}
+                {% else %}
+                    No feedback submitted yet.
+                {% endif %}
+            </p>
+
+            {% if current_user_role == 'faculty' %}
+                <!-- Faculty feedback submission form -->
+                <h4>Submit Feedback:</h4>
+                <form method="POST" action="{{ url_for('give_feedback') }}">
+                    <textarea name="feedback" placeholder="Enter your feedback..." required></textarea>
+                    <input type="hidden" name="project_id" value="{{ project.id }}">
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            {% endif %}
+
+            {% if current_user and current_user.email == project.email %}
+                <!-- Edit/Delete options visible only to student who uploaded -->
+                <h4>Edit Project Information</h4>
+                <form method="POST" action="{{ url_for('edit_project', project_id=project.id) }}" enctype="multipart/form-data">
+                    <label for="project_title">Project Title:</label>
+                    <input type="text" name="project_title" value="{{ project.project_title }}" required><br><br>
+
+                    <label for="abstract">Update Abstract (PDF only):</label>
+                    <input type="file" name="abstract" accept=".pdf"><br><br>
+
+                    <label for="files">Update Project Files (multiple):</label>
+                    <input type="file" name="files" multiple><br><br>
+
+                    <button type="submit">Save Changes</button>
+                </form>
+
+                <br>
+
+                <form method="POST" action="{{ url_for('delete_project', project_id=project.id) }}" onsubmit="return confirm('Are you sure you want to delete this project?');">
+                    <button type="submit" class="btn btn-danger">Delete Project</button>
+                </form>
+            {% else %}
+                <p>You do not have permission to edit or delete this project.</p>
+            {% endif %}
+
+            <!-- Back Button -->
+            <a href="{% if current_user_role == 'student' %}{{ url_for('view_projects') }}{% else %}{{ url_for('faculty_dashboard') }}{% endif %}" 
+               class="btn btn-back">
+                Back
+            </a>
+        {% else %}
+            <p>Project not found!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
