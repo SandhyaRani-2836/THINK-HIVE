@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d8cfc4;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .dashboard-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .dashboard-container p {
+            font-size: 1.1em;
+            color: #666;
+        }
+        .dashboard-container a {
+            display: inline-block;
+            margin: 15px 20px;
+            padding: 10px 20px;
+            background-color: #c9a47f;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .dashboard-container a:hover {
+            background-color: #c9a47f;
+        }
 
+        /* Styles for Upload Project and View Projects buttons */
+        .dashboard-container a.upload-project {
+            background-color: #c9a47f;  /* Green */
+        }
+        .dashboard-container a.upload-project:hover {
+            background-color: #c9a47f;
+        }
+        
+        .dashboard-container a.view-projects {
+            background-color: #c9a47f;  /* Blue */
+        }
+        .dashboard-container a.view-projects:hover {
+            background-color:#c9a47f;
+        }
+
+        .flash-message {
+            background-color: #ff9800;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border-left: 5px solid #ff5722;
+            font-size: 1.1em;
+        }
+        
+        /* Logout button style */
+        .logout-button {
+            background-color: #f44336; /* Red */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1em;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .logout-button:hover {
+            background-color: #e53935;
+        }
+
+        /* Styling for Projects List */
+        .projects-list {
+            margin-top: 20px;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .projects-list li {
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .projects-list li a {
+            color: #2a4d9b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .projects-list li a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-message">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h2>Welcome to the Student Dashboard</h2>
+        <p>Upload your project or view previously uploaded projects.</p>
+
+        <!-- Check if student has any projects uploaded -->
+        {% if projects %}
+            <h3>Your Projects:</h3>
+            <ul class="projects-list">
+                {% for project in projects %}
+                    <li>
+                        <strong>Project Name:</strong> {{ project.name }} <br>
+                        <strong>Description:</strong> {{ project.description or "No description provided." }} <br>
+                        <strong>Abstract:</strong>
+                        {% if project.abstract_file %}
+                            <a href="{{ url_for('static', filename='uploads/' + project.abstract_file) }}" target="_blank">View Abstract</a>
+                        {% else %}
+                            No abstract uploaded.
+                        {% endif %}
+                        <br>
+                        <a href="{{ url_for('view_projects', project_id=project.id) }}">View Project</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No projects uploaded yet! <br>  Click below to upload your project</p>
+        {% endif %}
+        
+        <a href="{{ url_for('upload_project') }}" class="upload-project">Upload Project</a>
+        <a href="{{ url_for('view_projects') }}" class="view-projects">View Projects</a>
+        
+        <!-- Logout link -->
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>
