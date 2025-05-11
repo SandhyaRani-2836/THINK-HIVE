@@ -1,1 +1,188 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d8cfc4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #e0e0e0;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1, h2 {
+            color: #2a4d9b;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #1976d2;
+        }
+        .btn-back {
+            background-color: #c9a47f;
+        }
+        .btn-back:hover {
+            background-color: #b28b6e;
+        }
+        ul {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a.file-link {
+            color: #2a4d9b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a.file-link:hover {
+            text-decoration: underline;
+        }
+        form {
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if project %}
+            <h1>{{ project['project_title'] }}</h1>
+
+            <p><strong>Department:</strong> {{ project['department'] }}</p>
+            <p><strong>Domain:</strong> {{ project['domain'] }}</p>
+
+            <p><strong>Team Members:</strong><br>
+                {{ project['member1_name'] }}
+                {% if project['member2_name'] %}, {{ project['member2_name'] }}{% endif %}
+                {% if project['member3_name'] %}, {{ project['member3_name'] }}{% endif %}
+                {% if project['member4_name'] %}, {{ project['member4_name'] }}{% endif %}
+                {% if project['member5_name'] %}, {{ project['member5_name'] }}{% endif %}
+            </p>
+
+            <!-- Abstract -->
+            <p><strong>Abstract:</strong><br>
+                {% if project['abstract_filename'] %}
+                    <a href="{{ url_for('download_file', filename=project['abstract_filename']|urlencode) }}" class="file-link" target="_blank">View Abstract</a>
+                {% else %}
+                    No abstract uploaded.
+                {% endif %}
+            </p>
+
+            <!-- Project Files -->
+            <p><strong>Project Files:</strong><br>
+                {% if files_list and files_list|length > 0 %}
+                    <ul>
+                        {% for file in files_list %}
+                            <li><a href="{{ url_for('download_file', filename=file|urlencode) }}" target="_blank" class="file-link">{{ file }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    No project files uploaded.
+                {% endif %}
+            </p>
+
+            <!-- Hardware File -->
+            <p><strong>Hardware File:</strong><br>
+                {% if project['hardware_filename'] %}
+                    <a href="{{ url_for('download_file', filename=project['hardware_filename']|urlencode) }}" target="_blank" class="file-link">View Hardware File</a>
+                {% else %}
+                    No hardware file uploaded.
+                {% endif %}
+            </p>
+
+            <!-- Hardware Link -->
+            <p><strong>Hardware Link:</strong><br>
+                {% if project['hardware_req_link'] %}
+                    <a href="{{ project['hardware_req_link'] }}" target="_blank" class="file-link">View Hardware Link</a>
+                {% else %}
+                    No hardware link provided.
+                {% endif %}
+            </p>
+
+            <!-- Code Link -->
+            <p><strong>Code Repository:</strong><br>
+                {% if project['code_link'] %}
+                    <a href="{{ project['code_link'] }}" target="_blank" class="file-link">View Code</a>
+                {% else %}
+                    No code repository link provided.
+                {% endif %}
+            </p>
+
+            <!-- Faculty Feedback -->
+            <p><strong>Faculty Feedback:</strong><br>
+                {% if project['feedback'] %}
+                    {{ project['feedback'] }}
+                {% else %}
+                    No feedback submitted yet.
+                {% endif %}
+            </p>
+
+            <!-- Feedback Form for Faculty -->
+            {% if current_user_role == 'faculty' %}
+                <h4>Submit Feedback:</h4>
+                <form method="POST" action="{{ url_for('give_feedback') }}">
+                    <textarea name="feedback" placeholder="Enter your feedback..." required></textarea>
+                    <input type="hidden" name="project_id" value="{{ project['id'] }}">
+                    <button type="submit">Submit Feedback</button>
+                </form>
+            {% endif %}
+
+            <!-- Back Button -->
+            <a href="{% if current_user_role == 'student' %}{{ url_for('view_projects') }}{% else %}{{ url_for('faculty_dashboard') }}{% endif %}" 
+               class="btn btn-back">Back</a>
+
+        {% else %}
+            <p>Project not found!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
