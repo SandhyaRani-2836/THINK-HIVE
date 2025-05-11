@@ -1,79 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Sign Up - ThinkHive</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    .error-message {
-      color: red;
-      font-size: 0.9em;
-      margin-top: 4px;
-    }
-    .input-group {
-      margin-bottom: 15px;
-    }
-  </style>
-</head>
-<body class="auth">
-  <div class="auth-container">
-    <h2>Sign Up</h2>
-    <form id="signup-form" novalidate>
-      <div class="input-group">
-        <input type="text" id="username" placeholder="Username" required>
-        <span id="username-error" class="error-message"></span>
-      </div>
-      <div class="input-group">
-        <input type="email" id="email" placeholder="Email" required>
-        <span id="email-error" class="error-message"></span>
-      </div>
-            <div class="input-group">
-        <input type="password" id="password" placeholder="Password" required>
-        <span id="password-error" class="error-message"></span>
-      </div>
-      <button type="submit">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="login.html">Login</a></p>
-  </div>
+signup.html
+{% extends "base.html" %}
 
-  <script>
-    const form = document.getElementById("signup-form");
-    const username = document.getElementById("username");
-    const email = document.getElementById("email");
-  
-    const password = document.getElementById("password");
+{% block title %}Sign Up - ThinkHive{% endblock %}
 
-    const usernameError = document.getElementById("username-error");
-    const emailError = document.getElementById("email-error");
-       const passwordError = document.getElementById("password-error");
+{% block content %}
+<div class="auth-container">
+  <h2>Sign Up</h2>
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+  <form id="signup-form" action="{{ url_for('signup') }}" method="POST" novalidate>
+
+    <!-- Flash messages for username -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'username' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     
-    function validateInput() {
-      let isValid = true;
+    <div class="input-group">
+      <input type="text" id="username" name="username" placeholder="Username" required>
+      <span id="username-error" class="error-message"></span>
+    </div>
 
-      usernameError.textContent = username.value.trim() === "" ? "Username is required." : "";
-      emailError.textContent = !emailRegex.test(email.value.trim()) ? "Invalid email address." : "";
-     
-      passwordError.textContent = password.value.length < 6 ? "Password must be at least 6 characters." : "";
+    <!-- Flash messages for email -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'email' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <div class="input-group">
+      <input type="email" id="email" name="email" placeholder="Email" required>
+      <span id="email-error" class="error-message"></span>
+    </div>
 
-      if (usernameError.textContent || emailError.textContent  || passwordError.textContent) {
-        isValid = false;
-      }
+    <!-- //Flash messages for password -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'password' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <div class="input-group">
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <span id="password-error" class="error-message"></span>
+    </div>
 
-      return isValid;
+    <!-- Flash messages for role -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'role' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <div class="input-group">
+      <select id="role" name="role" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="student">Student</option>
+        <option value="faculty">Faculty</option>
+      </select>
+      <span id="role-error" class="error-message"></span>
+       </div>
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+</div>
+
+<style>
+  .auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  .input-group {
+    margin-bottom: 15px;
+  }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+  }
+  button {
+    padding: 10px 15px;
+    background-color: #2a4d9b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #1e3a7f;
+  }
+</style>
+
+<script>
+  const form = document.getElementById("signup-form");
+  const username = document.getElementById("username");
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+  const role = document.getElementById("role");
+
+  const usernameError = document.getElementById("username-error");
+  const emailError = document.getElementById("email-error");
+  const passwordError = document.getElementById("password-error");
+  const roleError = document.getElementById("role-error");
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+  const passwordRegex = /^(?=.[A-Z])(?=.\d)(?=.[!@#$%^&()_+\-=👦👦{};':"\\|,.<>\/?]).{8,}$/;
+
+  async function checkEmailExists(emailValue) {
+    try {
+      const response = await fetch(/check_email?email=${encodeURIComponent(emailValue)});
+      const data = await response.json();
+      return data.exists;
+    } catch (error) {
+      console.error("Error checking email existence:", error);
+      return false;
+    }
+  }
+
+  async function validateInput() {
+    usernameError.textContent = username.value.trim() === "" ? "Username is required." : "";
+
+    if (!emailRegex.test(email.value.trim())) {
+      emailError.textContent = "Invalid email address.";
+    } else {
+      const exists = await checkEmailExists(email.value.trim());
+      emailError.textContent = exists ? "Email already exists." : "";
     }
 
-    form.addEventListener("submit", function (e) {
-      if (!validateInput()) {
-        e.preventDefault();
-      }
-    });
+    passwordError.textContent = !passwordRegex.test(password.value)
+      ? "Password must be at least 8 characters, include 1 uppercase letter, 1 digit, and 1 special character."
+      : "";
 
-    // Real-time validation
-    username.addEventListener("input", validateInput);
-    email.addEventListener("input", validateInput);
-       password.addEventListener("input", validateInput);
-  </script>
-</body>
-</html>
+    roleError.textContent = role.value === "" ? "Please select a role." : "";
+
+    return !(usernameError.textContent || emailError.textContent || passwordError.textContent || roleError.textContent);
+  }
+
+  form.addEventListener("submit", async function (e) {
+    const isValid = await validateInput();
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+
+  [username, email, password, role].forEach(input => {
+    input.addEventListener("input", validateInput);
+    input.addEventListener("change", validateInput);
+  });
+</script>
+
+{% endblock %}
