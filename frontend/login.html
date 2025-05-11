@@ -1,70 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Login - ThinkHive</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    .error-message {
-      color: red;
-      font-size: 0.9em;
-      margin-top: 4px;
+{% extends "base.html" %}
+
+{% block title %}Login - ThinkHive{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <h2>Login</h2>
+
+  <form id="login-form" action="{{ url_for('login') }}" method="POST" novalidate>
+    
+    <!-- Flash messages for email -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'email' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <div class="input-group">
+      <input type="email" id="email" name="email" placeholder="Enter Email" required>
+      <span id="email-error" class="error-message"></span>
+    </div>
+
+    <!-- Flash messages for password -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'password' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="input-group">
+      <input type="password" id="password" name="password" placeholder="Enter Password" required>
+      <span id="password-error" class="error-message"></span>
+    </div>
+
+    <!-- Flash messages for role -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'role' %}
+            <div class="error-message">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="input-group">
+      <label for="role">Login as:</label>
+      <select id="role" name="role" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="student">Student</option>
+        <option value="faculty">Faculty</option>
+      </select>
+      <span id="role-error" class="error-message"></span>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 10px;">
+      <a href="{{ url_for('forgot_password') }}" style="font-size: 14px; color: #2a4d9b;">Forgot Password?</a>
+    </div>
+
+    <button type="submit">Login</button>
+  </form>
+  <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+</div>
+
+<script>
+  const form = document.getElementById("login-form");
+  const email = document.getElementById("email");
+  const password = document.getElementById("password");
+  const role = document.getElementById("role");
+
+  const emailError = document.getElementById("email-error");
+  const passwordError = document.getElementById("password-error");
+  const roleError = document.getElementById("role-error");
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+
+  function validateInput() {
+    emailError.textContent = !emailRegex.test(email.value.trim()) ? "Invalid email address." : "";
+    passwordError.textContent = password.value.length < 6 ? "Password must be at least 6 characters." : "";
+    roleError.textContent = role.value === "" ? "Please select a role." : "";
+    return !(emailError.textContent || passwordError.textContent || roleError.textContent);
+  }
+
+  form.addEventListener("submit", function (e) {
+    if (!validateInput()) {
+      e.preventDefault();
     }
-    .input-group {
-      margin-bottom: 15px;
-    }
-  </style>
-</head>
-<body class="auth">
-  <div class="auth-container">
-    <h2>Login</h2>
-    <form id="login-form" novalidate>
-      <div class="input-group">
-        <input type="email" id="email" placeholder="Enter Email" required>
-        <span id="email-error" class="error-message"></span>
-      </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder="Enter Password" required>
-        <span id="password-error" class="error-message"></span>
-      </div>
-      <div style="text-align: right; margin-bottom: 10px;">
-        <a href="#" style="font-size: 14px; color: #2a4d9b;">Forgot Password?</a>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-  </div>
+  });
 
-  <script>
-    const form = document.getElementById("login-form");
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const emailError = document.getElementById("email-error");
-    const passwordError = document.getElementById("password-error");
+  email.addEventListener("input", validateInput);
+  password.addEventListener("input", validateInput);
+  role.addEventListener("change", validateInput);
+</script>
 
-    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-
-    function validateInput() {
-      let isValid = true;
-
-      emailError.textContent = !emailRegex.test(email.value.trim()) ? "Invalid email address." : "";
-      passwordError.textContent = password.value.length < 6 ? "Password must be at least 6 characters." : "";
-
-      if (emailError.textContent || passwordError.textContent) {
-        isValid = false;
-      }
-
-      return isValid;
-    }
-
-    form.addEventListener("submit", function (e) {
-      if (!validateInput()) {
-        e.preventDefault();
-      }
-    });
-
-    email.addEventListener("input", validateInput);
-    password.addEventListener("input", validateInput);
-  </script>
-</body>
-</html>
+{% endblock %}
