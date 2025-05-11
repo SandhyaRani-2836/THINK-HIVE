@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="feedback-container">
+        <h2>Provide Feedback for Project: {{ project.member1_name }} ({{ project.member1_roll }})</h2>
+        
+        <form method="POST" action="{{ url_for('give_feedback') }}">
+            <div class="form-group">
+                <label for="project">Select Project</label>
+                <select class="form-control" id="project" name="project_id" required>
+                    {% for project in projects %}
+                        <option value="{{ project.id }}">
+                            {{ project.member1_name }} ({{ project.member1_roll }}) - {{ project.domain }} - {{ project.department }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="feedback">Feedback</label>
+                <textarea name="feedback" placeholder="Provide feedback here..." rows="5" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-feedback">Submit Feedback</button>
+        </form>
+    </div>
+</body>
+</html>
