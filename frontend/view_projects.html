@@ -1,1 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Projects - ThinkHive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
 
+        nav {
+            background-color: #f4f4f4;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        nav a:hover {
+            color: #c9a47f;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #d8cfc4;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filters {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filters input, .filters select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        .projects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-evenly;
+        }
+
+        .project-card {
+            background-color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card h3 {
+            color: #c9a47f;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .project-card p {
+            color: #555;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .project-card a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: #c9a47f;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .project-card a:hover {
+            background-color: #a9825e;
+        }
+
+        .no-projects {
+            text-align: center;
+            font-size: 18px;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+
+    <script>
+        function filterProjects() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const departmentFilter = document.getElementById("department").value;
+            const domainFilter = document.getElementById("domain").value;
+            const cards = document.querySelectorAll(".project-card");
+
+            cards.forEach(card => {
+                const title = card.getAttribute("data-title").toLowerCase();
+                const department = card.getAttribute("data-department");
+                const domain = card.getAttribute("data-domain");
+
+                const matchSearch = title.includes(searchInput);
+                const matchDepartment = departmentFilter === "All" || department === departmentFilter;
+                const matchDomain = domainFilter === "All" || domain === domainFilter;
+
+                card.style.display = (matchSearch && matchDepartment && matchDomain) ? "block" : "none";
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation bar -->
+    <nav>
+        <div>
+            {% if session['role'] == 'student' %}
+                <a href="{{ url_for('student_dashboard') }}">Dashboard</a>
+            {% elif session['role'] == 'faculty' %}
+                <a href="{{ url_for('faculty_dashboard') }}">Dashboard</a>
+            {% endif %}
+        </div>
+        <div>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Explore Projects</h1>
+
+        <!-- Filters -->
+        <div class="filters">
+            <input type="text" id="search" onkeyup="filterProjects()" placeholder="Search projects..." />
+
+            <select id="department" onchange="filterProjects()">
+                <option value="All">All Departments</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="CE">CE</option>
+                <option value="EEE">EEE</option>
+            </select>
+
+            <select id="domain" onchange="filterProjects()">
+                <option value="All">All Domains</option>
+                <option value="AI/ML">AI/ML</option>
+                <option value="Web Development">Web Development</option>
+                <option value="IoT">IoT</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+            </select>
+        </div>
+
+        <!-- Projects List -->
+        {% if projects %}
+            <div class="projects-list">
+                {% for project in projects %}
+                <div class="project-card"
+                     data-title="{{ project.title }}"
+                     data-department="{{ project.department }}"
+                     data-domain="{{ project.domain }}">
+                    <h3>{{ project.title }}</h3>
+                    <p><strong>Department:</strong> {{ project.department }}</p>
+                    <p><strong>Domain:</strong> {{ project.domain }}</p>
+                    <p><strong>Student:</strong> {{ project.member1_name }}</p>
+                    <a href="{{ url_for('view_project_details', project_id=project['id']) }}" class="btn btn-primary">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-projects">No projects found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
